@@ -30,16 +30,25 @@ void settings() {
   size(w, h);
 }
 
+/*
+ * This method is run once by Processing.
+ */
 void setup() {
   background(0);
-  
 }
 
+/*
+ * This method is continuously run every frame.
+ *
+ * https://processing.org/examples/setupdraw.html
+ */
 void draw() {
   background(0);
   
+  //Draws the corner button.
   drawLightSpeedButton();
   
+  //If you hover over the bottom button, enter lightspeed.
   if(overLightSpeed()){
     drawStars();
   }
@@ -47,18 +56,29 @@ void draw() {
   bx = hx+10;
   by = hy+15;
  
+  //set the handle color
   fill(100);
+  //draw the handle
   rect(hx, hy, handleWidth, handleLength);
   
+  //set the button color
   fill(0, 255, 0);
+  //draw the green button
   ellipse(bx, by, buttonSize, buttonSize);
+  //if you hover over the button, make it white to incicate clicability.
   if(overButton()){
     fill(255);
     ellipse(bx, by, buttonSize, buttonSize);
   }
+  //draw lightSaber (if saberOn)
   drawLightsaber();
 }
 
+/*
+ * Built in function mousePressed is called whenever
+ * the mouse is pressed. You can add actions based on when
+ * this function is called.
+ */
 void mousePressed() {
   if(overHandle()){
     mouseLock = true;
@@ -73,14 +93,26 @@ void mousePressed() {
   yOffset = mouseY-by;
 }
 
+/*
+ * Built in function mouseDragged is called whenever
+ * the mouse is dragged. You can add actions based on when
+ * this function is called.
+ */
 void mouseDragged() {
+  //Mouse lock is to used to move the handle when dragged
   if(mouseLock) {
     hx = mouseX-xOffset; 
     hy = mouseY-yOffset; 
   }
 }
 
+/*
+ * Built in function mousePressed is called whenever
+ * the mouse is released. You can add actions based on when
+ * this function is called.
+ */
 void mouseReleased() {
+  //release the handle when button released from drag.
   mouseLock = false;
 }
 
@@ -91,6 +123,9 @@ void drawLightsaber(){
    } 
 }
 
+/*
+ *  Return true if mouse position is above LS button
+ */
 boolean overButton(){
   if (mouseX > bx-buttonSize && mouseX < bx+buttonSize && 
       mouseY > by-buttonSize && mouseY < by+buttonSize) {
@@ -99,6 +134,9 @@ boolean overButton(){
   return false;
 }
 
+/*
+ * Return true if mouse position over Lightspeed button
+ */ 
 boolean overLightSpeed(){
   if (mouseX > lsx-lssize && mouseX < lsx+lssize && 
       mouseY > lsy-lssize && mouseY < lsy+lssize) {
@@ -121,6 +159,9 @@ void drawLightSpeedButton(){
 }
 
 
+/*
+ * Draw random stars in space.
+ */
 void drawStars(){
   fill(255);
   for(int i = 0; i < 100; i++){
