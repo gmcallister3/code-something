@@ -1,5 +1,5 @@
 int w = 1000;
-int h = 800;
+int h = 750;
 
 //Mouse Functionality
 boolean mouseLock = false;
@@ -13,6 +13,8 @@ int handleLength = 80;
 int handleWidth = 20;
 int saberLength = 300;
 boolean saberOn = false;
+boolean lightSpeedOn = false;
+boolean forceFieldActivated = false;
 
 //Button functionality
 float bx = 510;
@@ -24,6 +26,8 @@ boolean lightSpeed = false;
 int lsx = w - 20;
 int lsy = h - 20;
 int lssize = 20;
+
+int numStars = 100;
 
 
 void settings() {
@@ -48,30 +52,34 @@ void draw() {
   //Draws the corner button.
   drawLightSpeedButton();
   
-  //If you hover over the bottom button, enter lightspeed.
-  if(overLightSpeed()){
-    drawStars();
-  }
-  
   bx = hx+10;
   by = hy+15;
- 
+  
+  drawStars(); 
+  
+  activateForceField();
+  drawForceField();
+  
   //set the handle color
   fill(100);
+  stroke(0);
   //draw the handle
   rect(hx, hy, handleWidth, handleLength);
   
   //set the button color
   fill(0, 255, 0);
+  stroke(0);
   //draw the green button
   ellipse(bx, by, buttonSize, buttonSize);
   //if you hover over the button, make it white to incicate clicability.
   if(overButton()){
     fill(255);
+    stroke(0);
     ellipse(bx, by, buttonSize, buttonSize);
   }
-  //draw lightSaber (if saberOn)
+  
   drawLightsaber();
+  
 }
 
 /*
@@ -89,6 +97,10 @@ void mousePressed() {
   else if(!overHandle()){
     mouseLock = false;
   }
+  
+  if (overLightSpeed()) {
+    lightSpeedOn = !lightSpeedOn;
+  }
   xOffset = mouseX-bx; 
   yOffset = mouseY-by;
 }
@@ -104,6 +116,7 @@ void mouseDragged() {
     hx = mouseX-xOffset; 
     hy = mouseY-yOffset; 
   }
+  
 }
 
 /*
@@ -119,6 +132,7 @@ void mouseReleased() {
 void drawLightsaber(){
    if(saberOn){
      fill(0, 255, 0);
+     stroke(0);
      rect(hx, hy-saberLength, handleWidth, saberLength);
    } 
 }
@@ -153,23 +167,48 @@ boolean overHandle(){
   return false;
 }
 
+//Handles drawing lightSpeedOn (green) and Off (red)
 void drawLightSpeedButton(){
-  fill(255,0,0);
-  ellipse(lsx, lsy, lssize, lssize);
+  if (lightSpeedOn) {
+    fill(0,255,0);
+    stroke(0);
+    ellipse(lsx, lsy, lssize, lssize);
+  } else {
+    fill(255,0,0);
+    stroke(0);
+    ellipse(lsx, lsy, lssize, lssize);
+  }
+  
 }
-
 
 /*
  * Draw random stars in space.
  */
 void drawStars(){
-  fill(255);
-  for(int i = 0; i < 100; i++){
-    float m = random(2);
-    if(m!=0){
-      float f = random(w);
-      float y = random(h);
-      ellipse(f, y, 5,5);
+  if (lightSpeedOn) {
+    fill(255);
+    stroke(0);
+    for(int i = 0; i < numStars; i++){
+      float m = random(2);
+      if(m!=0){
+        float f = random(w);
+        float y = random(h);
+        ellipse(f, y, 5,5);
+      }
     }
+  }
+}
+
+void activateForceField() {
+  forceFieldActivated = saberOn && lightSpeedOn;
+}
+
+void drawForceField() {
+  if (forceFieldActivated) {
+     stroke(0, 255, 0);
+     fill(0);
+     float centerBeamX = hx + (handleWidth / 2);
+     float centerBeamY = hy - (saberLength / 2);
+     ellipse(centerBeamX, centerBeamY, 300, 500);
   }
 }
